@@ -24,6 +24,7 @@ jobs:
           cd ../../..
           git add wp-content/plugins/common-plugin
           git commit -m "chore: updated common plugin submodule from plugin repo"
+          git remote -v
           git push origin main
 
       - name: Clone and update wordpress2
@@ -36,4 +37,5 @@ jobs:
           cd ../../..
           git add wp-content/plugins/common-plugin
           git commit -m "chore: updated common plugin submodule from plugin repo"
+          git remote -v
           git push origin main
