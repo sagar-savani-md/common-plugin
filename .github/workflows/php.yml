@@ -1,4 +1,4 @@
-name: Auto Update Submodule in Websites
+name: Auto Update Submodule in Websites-1
 
 on:
   push:
