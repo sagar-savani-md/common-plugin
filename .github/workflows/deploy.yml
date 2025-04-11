@@ -1,0 +1,41 @@
+name: Auto Update Submodule in Websites-1
+
+on:
+  push:
+    branches:
+      - main  # or your plugin's main branch
+
+jobs:
+  update-websites:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Sagar Savani"
+          git config --global user.email "sagar.savani@multidots.com"
+
+      - name: Clone and update wordpress1
+        run: |
+          git clone --recurse-submodules https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/sagar-savani-md/wordpress-1.git
+          cd wordpress-1
+          cd wp-content/plugins/common-plugin
+          git checkout main
+          git pull origin main
+          cd ../../..
+          git add wp-content/plugins/common-plugin
+          git commit -m "chore: updated common plugin submodule from plugin repo"
+          git remote -v
+          git push origin main
+
+      - name: Clone and update wordpress2
+        run: |
+          git clone --recurse-submodules https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/sagar-savani-md/wordpress-2.git
+          cd wordpress-2
+          cd wp-content/plugins/common-plugin
+          git checkout main
+          git pull origin main
+          cd ../../..
+          git add wp-content/plugins/common-plugin
+          git commit -m "chore: updated common plugin submodule from plugin repo"
+          git remote -v
+          git push origin main
