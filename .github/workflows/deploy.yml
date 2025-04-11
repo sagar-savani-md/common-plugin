@@ -18,14 +18,14 @@ jobs:
         run: |
           git config --global user.name "Sagar Savani"
           git config --global user.email "sagar.savani@multidots.com"
-
-      - name: Read deploy sites from .sites-to-deploy file
-        id: read_sites
+      
+      - name: Fetch deploy sites from API
+        id: fetch_sites
         run: |
-          echo "Reading .sites-to-deploy..."
-          SITES=$(cat .sites-to-deploy | tr '\n' ' ')
+          echo "Fetching site list from API..."
+          SITES=$(curl -s -u chicken:comfortable https://fluffy-knowledge.localsite.io/wp-json/custom/v1/acf | jq -r '.[]' | tr '\n' ' ')
           echo "SITES=$SITES" >> $GITHUB_ENV
-          echo $SITES
+          echo "Sites to deploy: $SITES"
 
       - name: Update selected site repos
         run: |
