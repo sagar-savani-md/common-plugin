@@ -20,6 +20,7 @@ jobs:
           echo "Reading .sites-to-deploy..."
           SITES=$(cat .sites-to-deploy | tr '\n' ' ')
           echo "SITES=$SITES" >> $GITHUB_ENV
+          echo $SITES
 
       - name: Update selected site repos
         run: |
