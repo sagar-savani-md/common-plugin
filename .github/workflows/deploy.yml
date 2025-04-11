@@ -14,28 +14,24 @@ jobs:
           git config --global user.name "Sagar Savani"
           git config --global user.email "sagar.savani@multidots.com"
 
-      - name: Clone and update wordpress1
+      - name: Read deploy sites from .sites-to-deploy file
+        id: read_sites
         run: |
-          git clone --recurse-submodules https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/sagar-savani-md/wordpress-1.git
-          cd wordpress-1
-          cd wp-content/plugins/common-plugin
-          git checkout main
-          git pull origin main
-          cd ../../..
-          git add wp-content/plugins/common-plugin
-          git commit -m "chore: updated common plugin submodule from plugin repo"
-          git remote -v
-          git push origin main
+          echo "Reading .sites-to-deploy..."
+          SITES=$(cat .sites-to-deploy | tr '\n' ' ')
+          echo "SITES=$SITES" >> $GITHUB_ENV
 
-      - name: Clone and update wordpress2
+      - name: Update selected site repos
         run: |
-          git clone --recurse-submodules https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/sagar-savani-md/wordpress-2.git
-          cd wordpress-2
-          cd wp-content/plugins/common-plugin
-          git checkout main
-          git pull origin main
-          cd ../../..
-          git add wp-content/plugins/common-plugin
-          git commit -m "chore: updated common plugin submodule from plugin repo"
-          git remote -v
-          git push origin main
+          for site in $SITES; do
+            echo "Updating $site..."
+            git clone --recurse-submodules https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/sagar-savani-md/$site.git
+            cd $site
+            cd wp-content/plugins/common-plugin
+            git checkout main
+            git pull origin main
+            cd ../../..
+            git add wp-content/plugins/common-plugin
+            git commit -m "Auto-update common plugin submodule"
+            git push origin main
+          done
